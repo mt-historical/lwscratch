@@ -182,13 +182,22 @@ end
 
 
 function utils.robot_move (robot_pos, side)
+	local meta = minetest.get_meta (robot_pos)
 	local cur_node = minetest.get_node_or_nil (robot_pos)
-	if not cur_node then
-		return false
+	if not meta or not cur_node then
+		return nil
 	end
 
 	local pos = get_robot_side (robot_pos, cur_node.param2, side)
 	if not pos then
+		return false
+	end
+
+	local in_owned_area = not minetest.is_protected(pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (pos, "")
+	local denied = not in_owned_area and in_protected_area
+	
+	if denied then
 		return false
 	end
 
@@ -333,7 +342,11 @@ function utils.robot_dig (robot_pos, side)
 
 	local nodedef = minetest.registered_nodes[node.name]
 
-	if not nodedef or not nodedef.diggable or minetest.is_protected (pos, "") or
+	local in_owned_area = not minetest.is_protected (pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (pos, "")
+	local denied = not in_owned_area and in_protected_area
+
+	if not nodedef or not nodedef.diggable or denied or
 		minetest.get_item_group (node.name, "unbreakable") > 0 then
 
 		return nil
@@ -434,7 +447,7 @@ function utils.robot_place (robot_pos, side, nodename)
 	if node.name ~= "air" then
 		local nodedef = minetest.registered_nodes[node.name]
 
-		if not nodedef or not nodedef.buildable_to or minetest.is_protected (pos, "") then
+		if not nodedef or not nodedef.buildable_to then
 			return false
 		end
 
@@ -449,6 +462,14 @@ function utils.robot_place (robot_pos, side, nodename)
 				place_pos = get_robot_side (pos, cur_node.param2, "front")
 			end
 		end
+	end
+
+	local in_owned_area = not minetest.is_protected (place_pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (place_pos, "")
+	local denied = not in_owned_area and in_protected_area
+
+	if denied then
+		return false
 	end
 
 	if not inv:remove_item ("storage", stack) then
@@ -474,7 +495,7 @@ function utils.robot_place (robot_pos, side, nodename)
 		pointed_thing.above = place_pos
 	end
 
-	if utils.settings.use_mod_on_place then
+	if utils.settings.use_mod_on_place and not in_protected_area then
 		if def and def.on_place then
 			local result, leftover = pcall (def.on_place, stack, nil, pointed_thing)
 
@@ -676,6 +697,14 @@ function utils.robot_put (robot_pos, side, item)
 		return false
 	end
 
+	local in_owned_area = not minetest.is_protected(pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (pos, "")
+	local denied = not in_owned_area and in_protected_area
+	
+	if denied then
+		return false
+	end
+
 	local node = utils.get_far_node (pos)
 
 	if not node then
@@ -763,6 +792,14 @@ function utils.robot_pull (robot_pos, side, item)
 	local pos = get_robot_side (robot_pos, cur_node.param2, side)
 
 	if not pos then
+		return false
+	end
+
+	local in_owned_area = not minetest.is_protected(pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (pos, "")
+	local denied = not in_owned_area and in_protected_area
+	
+	if denied then
 		return false
 	end
 
@@ -857,6 +894,14 @@ function utils.robot_put_stack (robot_pos, side, item)
 		return false
 	end
 
+	local in_owned_area = not minetest.is_protected (pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (pos, "")
+	local denied = not in_owned_area and in_protected_area
+	
+	if denied then
+		return false
+	end
+
 	local node = utils.get_far_node (pos)
 
 	if not node then
@@ -929,6 +974,14 @@ function utils.robot_pull_stack (robot_pos, side, item)
 	local pos = get_robot_side (robot_pos, cur_node.param2, side)
 
 	if not pos then
+		return false
+	end
+
+	local in_owned_area = not minetest.is_protected (pos, meta:get_string("owner"))
+	local in_protected_area = minetest.is_protected (pos, "")
+	local denied = not in_owned_area and in_protected_area
+	
+	if denied then
 		return false
 	end
 
