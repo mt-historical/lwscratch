@@ -185,7 +185,7 @@ function utils.robot_move (robot_pos, side)
 	local meta = minetest.get_meta (robot_pos)
 	local cur_node = minetest.get_node_or_nil (robot_pos)
 	if not meta or not cur_node then
-		return nil
+		return false
 	end
 
 	local pos = get_robot_side (robot_pos, cur_node.param2, side)
