@@ -339,7 +339,7 @@ function utils.robot_dig (robot_pos, side)
 	local nodedef = minetest.registered_nodes[node.name]
 
 	if not nodedef or not nodedef.diggable or 
-    minetest.is_protected (pos, meta:get_string("owner")) or
+		minetest.is_protected (pos, meta:get_string("owner")) or
 		minetest.get_item_group (node.name, "unbreakable") > 0 then
 
 		return nil
