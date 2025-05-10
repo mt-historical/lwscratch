@@ -1215,6 +1215,16 @@ local function run_chat (program, robot_pos)
 		message = tostring (program:get_value (item))
 	end
 
+	local meta = minetest.get_meta (robot_pos)
+	local robot_name = meta:get_string ("name")
+	if robot_name ~= "" and not string.match (robot_name, '^%..*$') then
+		message = "[robot " .. robot_name .. "] " .. message
+	else
+		-- Prepend minimally if name is empty or starts with "."
+		-- Note: Not allowing non-prefixed messages to prevent it being used for impersonation. 
+		message = "[robot] " .. message
+	end
+
 	utils.robot_chat (robot_pos, message)
 
 	return true
