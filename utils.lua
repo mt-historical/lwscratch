@@ -6,9 +6,9 @@ if minetest.get_translator and minetest.get_translator ("lwscratch") then
 	utils.S = minetest.get_translator ("lwscratch")
 elseif minetest.global_exists ("intllib") then
    if intllib.make_gettext_pair then
-      utils.S = intllib.make_gettext_pair ()
+  	utils.S = intllib.make_gettext_pair ()
    else
-      utils.S = intllib.Getter ()
+  	utils.S = intllib.Getter ()
    end
 else
    utils.S = function (s) return s end

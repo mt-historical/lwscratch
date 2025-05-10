@@ -2,7 +2,6 @@ local utils = ...
 local S = utils.S
 
 
-
 local function on_construct (pos)
 	local meta = minetest.get_meta (pos)
 
@@ -290,9 +289,7 @@ local function can_dig (pos, player)
 
 			if program:len () > 60000 then
 				if player and player:is_player () then
-					minetest.chat_send_player (player:get_player_name (),
-														minetest.colorize ("#ff4040",
-																				 "Program too large to remember!"))
+					minetest.chat_send_player (player:get_player_name (), minetest.colorize ("#ff4040", "Program too large to remember!"))
 
 					return false
 				end
@@ -388,7 +385,6 @@ local function allow_metadata_inventory_move (pos, from_list, from_index, to_lis
 								-- Erase below itemstack
 								inv:set_stack (to_list, s + 10, nil)
 							end
-
 							return 0
 						elseif command == "lwscratch:cmd_line_duplicate" then
 							for s = inv_end, inv_curr, -1 do
@@ -678,12 +674,12 @@ minetest.register_node ("lwscratch:robot", {
 		}
 	},
    selection_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
    collision_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
 	groups = { cracky = 2, oddly_breakable_by_hand = 2 },
 	sounds = {
@@ -746,12 +742,12 @@ minetest.register_node ("lwscratch:robot_on", {
 		}
 	},
    selection_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
    collision_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
 	groups = { cracky = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1 },
 	sounds = {
