@@ -300,6 +300,10 @@ local function can_dig (pos, player)
 
 
 			if not inv:is_empty ("storage") then
+				if player and player:is_player () then
+					minetest.chat_send_player (player:get_player_name (), minetest.colorize ("#ff4040", "Robot inventory must be empty before it can be broken."))
+				end
+
 				return false
 			end
 		end
