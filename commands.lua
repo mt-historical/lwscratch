@@ -463,6 +463,26 @@ minetest.register_craftitem ("lwscratch:cmd_cond_value_equal", {
 
 
 
+minetest.register_craftitem ("lwscratch:cmd_cond_value_matches_regex", {
+	description = S("Variable matches the following regex string"),
+	short_description = S("Variable matches regex"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_cond_value_matches_regex.png",
+	stack_max = 1
+})
+
+
+
+minetest.register_craftitem ("lwscratch:cmd_cond_value_contains", {
+	description = S("Variable contains the following"),
+	short_description = S("Variable contains"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_cond_value_contains.png",
+	stack_max = 1
+})
+
+
+
 minetest.register_craftitem ("lwscratch:cmd_cond_value_greater", {
 	description = S("Variable greater than"),
 	short_description = S("Variable greater than"),

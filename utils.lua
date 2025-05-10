@@ -372,8 +372,8 @@ function utils.prep_inventory (inv, program)
 		"lwscratch:cmd_cond_value_less",
 		"lwscratch:cmd_cond_value_even",
 		"lwscratch:cmd_cond_value_odd",
-		"",
-		"",
+		"lwscratch:cmd_cond_value_contains",
+		"lwscratch:cmd_cond_value_matches_regex",
 		"",
 
 		"lwscratch:cmd_cond_contains",
