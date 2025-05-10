@@ -763,11 +763,57 @@ minetest.register_craftitem ("lwscratch:cmd_line_insert", {
 
 
 
+
+minetest.register_craftitem ("lwscratch:cmd_line_duplicate", {
+	description = S("Duplicate line"),
+	short_description = S("Duplicate line"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_line_duplicate.png",
+	stack_max = 1
+})
+
+
+
 minetest.register_craftitem ("lwscratch:cmd_line_remove", {
 	description = S("Remove line"),
 	short_description = S("Remove line"),
 	groups = { not_in_creative_inventory = 1 },
 	inventory_image = "lw_line_remove.png",
+	stack_max = 1
+})
+
+minetest.register_craftitem ("lwscratch:cmd_line_indent", {
+	description = S("Indent line"),
+	short_description = S("Indent line"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_line_indent.png",
+	stack_max = 1
+})
+
+
+minetest.register_craftitem ("lwscratch:cmd_line_unindent", {
+	description = S("Unindent line"),
+	short_description = S("Unindent line"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_line_unindent.png",
+	stack_max = 1
+})
+
+
+minetest.register_craftitem ("lwscratch:cmd_line_shift_down", {
+	description = S("Shift line down"),
+	short_description = S("Shift line down"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_line_shift_down.png",
+	stack_max = 1
+})
+
+
+minetest.register_craftitem ("lwscratch:cmd_line_shift_up", {
+	description = S("Shift line up"),
+	short_description = S("Shift line up"),
+	groups = { not_in_creative_inventory = 1 },
+	inventory_image = "lw_line_shift_up.png",
 	stack_max = 1
 })
 

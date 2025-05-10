@@ -394,13 +394,13 @@ function utils.prep_inventory (inv, program)
 		"lwscratch:cmd_cond_detect_down",
 		"lwscratch:cmd_cond_detect_up",
 
-		"lwscratch:cmd_line_insert",
 		"lwscratch:cmd_line_remove",
-		"",
-		"",
-		"",
-		"",
-		"",
+		"lwscratch:cmd_line_insert",
+		"lwscratch:cmd_line_duplicate",
+		"lwscratch:cmd_line_shift_down",
+		"lwscratch:cmd_line_shift_up",
+		"lwscratch:cmd_line_indent",
+		"lwscratch:cmd_line_unindent",
 		"",
 
 	}

@@ -366,23 +366,77 @@ local function allow_metadata_inventory_move (pos, from_list, from_index, to_lis
 
 					if stack and not stack:is_empty () then
 						local base = (math.floor ((to_index - 1) / 10) * 10) + 1
+						local inv_end  = utils.program_inv_size - 10
+						local inv_curr = base 
+                        local command = stack:get_name ()
 
-						if stack:get_name () == "lwscratch:cmd_line_insert" then
-							for s = utils.program_inv_size - 10, base, -1 do
+						if command == "lwscratch:cmd_line_insert" then
+							-- Loop from last itemstack upwards to current
+							for s = inv_end, inv_curr, -1 do
+								-- Replace below itemstack with current
 								inv:set_stack (to_list, s + 10, inv:get_stack (to_list, s))
+								-- Erase current itemstack
 								inv:set_stack (to_list, s, nil)
 							end
-
 							return 0
 
-						elseif stack:get_name () == "lwscratch:cmd_line_remove" then
-							for s = base, utils.program_inv_size - 10 do
+						elseif command == "lwscratch:cmd_line_remove" then
+							-- Loop from current itemstack downwards to last
+							for s = inv_curr, inv_end, 1 do
+								-- Replace current itemstack with below
 								inv:set_stack (to_list, s, inv:get_stack (to_list, s + 10))
+								-- Erase below itemstack
 								inv:set_stack (to_list, s + 10, nil)
 							end
 
 							return 0
-
+						elseif command == "lwscratch:cmd_line_duplicate" then
+							for s = inv_end, inv_curr, -1 do
+								-- Replace below itemstack with current
+								inv:set_stack (to_list, s + 10, inv:get_stack (to_list, s))
+								-- If below current line
+								if s < inv_curr - 9 then
+									-- Erase current itemstack
+									inv:set_stack (to_list, s, nil)
+								end
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_indent" then
+							local inv_linebeg = inv_curr
+							local inv_lineend = inv_curr + 8
+							for s = inv_lineend, inv_linebeg, -1 do
+								inv:set_stack (to_list, s + 1, inv:get_stack (to_list, s))
+								inv:set_stack (to_list, s, nil)
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_unindent" then
+							local inv_linebeg = inv_curr + 1
+							local inv_lineend = inv_curr + 9
+							for s = inv_linebeg, inv_lineend, 1 do
+								inv:set_stack (to_list, s - 1, inv:get_stack (to_list, s))
+								inv:set_stack (to_list, s, nil)
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_shift_down" then
+							local inv_linebeg = inv_curr
+							local inv_lineend = inv_curr + 9
+							for s = inv_linebeg, inv_lineend, 1 do
+								local stack_below = inv:get_stack (to_list, s + 10)
+								local stack_curr  = inv:get_stack (to_list, s)
+								inv:set_stack (to_list, s,      stack_below)
+								inv:set_stack (to_list, s + 10, stack_curr)
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_shift_up" then
+							local inv_linebeg = inv_curr - 10
+							local inv_lineend = inv_curr - 10 + 9
+							for s = inv_linebeg, inv_lineend, 1 do
+								local stack_below = inv:get_stack (to_list, s + 10)
+								local stack_curr  = inv:get_stack (to_list, s)
+								inv:set_stack (to_list, s,      stack_below)
+								inv:set_stack (to_list, s + 10, stack_curr)
+							end
+							return 0
 						end
 					end
 				end
