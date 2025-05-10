@@ -764,8 +764,8 @@ minetest.register_craftitem ("lwscratch:cmd_stat_if", {
 
 
 minetest.register_craftitem ("lwscratch:cmd_stat_loop", {
-	description = S("Loop"),
-	short_description = S("Loop"),
+	description = S("Loop while"),
+	short_description = S("Loop while"),
 	groups = { not_in_creative_inventory = 1 },
 	inventory_image = "lw_stat_loop.png",
 	stack_max = 1
