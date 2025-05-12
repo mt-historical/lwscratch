@@ -365,7 +365,7 @@ local function allow_metadata_inventory_move (pos, from_list, from_index, to_lis
 						local base = (math.floor ((to_index - 1) / 10) * 10) + 1
 						local inv_end  = utils.program_inv_size - 10
 						local inv_curr = base 
-                        local command = stack:get_name ()
+						local command = stack:get_name ()
 
 						if command == "lwscratch:cmd_line_insert" then
 							-- Loop from last itemstack upwards to current
