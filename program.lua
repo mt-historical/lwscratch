@@ -186,6 +186,8 @@ local check_condition_table =
 	["lwscratch:cmd_cond_counter_even"] = check_condition_counter_even,
 	["lwscratch:cmd_cond_counter_odd"] = check_condition_counter_odd,
 	["lwscratch:cmd_cond_value_equal"] = check_condition_variable,
+	["lwscratch:cmd_cond_value_matches_regex"] = check_condition_variable,
+	["lwscratch:cmd_cond_value_contains"]      = check_condition_variable,
 	["lwscratch:cmd_cond_value_greater"] = check_condition_variable,
 	["lwscratch:cmd_cond_value_less"] = check_condition_variable,
 	["lwscratch:cmd_cond_value_even"] = check_condition_variable_even,
@@ -805,6 +807,19 @@ local function run_condition_variable (program, robot_pos)
 
 		return var > val
 
+	elseif cmd.command == "lwscratch:cmd_cond_value_matches_regex" then
+		var = tostring(var)
+		val = tostring(val)
+
+		return string.match(var, val)
+
+	elseif cmd.command == "lwscratch:cmd_cond_value_contains" then
+		var = tostring(var)
+		val = tostring(val)
+		val = "^.*"..val..".*$"
+
+		return string.match(var, val)
+
 	else -- assume lwscratch:cmd_cond_value_equal
 		if utils.is_number_item (value) then
 			var = tonumber (var or 0) or 0
@@ -852,6 +867,8 @@ local run_condition_table =
 	["lwscratch:cmd_cond_counter_even"] = run_condition_counter_even,
 	["lwscratch:cmd_cond_counter_odd"] = run_condition_counter_odd,
 	["lwscratch:cmd_cond_value_equal"] = run_condition_variable,
+	["lwscratch:cmd_cond_value_matches_regex"] = run_condition_variable,
+	["lwscratch:cmd_cond_value_contains"]      = run_condition_variable,
 	["lwscratch:cmd_cond_value_greater"] = run_condition_variable,
 	["lwscratch:cmd_cond_value_less"] = run_condition_variable,
 	["lwscratch:cmd_cond_value_even"] = run_condition_variable_even,
@@ -1196,6 +1213,16 @@ local function run_chat (program, robot_pos)
 
 	if utils.is_value_item (item.command) then
 		message = tostring (program:get_value (item))
+	end
+
+	local meta = minetest.get_meta (robot_pos)
+	local robot_name = meta:get_string ("name")
+	if robot_name ~= "" and not string.match (robot_name, '^%..*$') then
+		message = "[robot " .. robot_name .. "] " .. message
+	else
+		-- Prepend minimally if name is empty or starts with "."
+		-- Note: Not allowing non-prefixed messages to prevent it being used for impersonation. 
+		message = "[robot] " .. message
 	end
 
 	utils.robot_chat (robot_pos, message)
