@@ -2,7 +2,6 @@ local utils = ...
 local S = utils.S
 
 
-
 local function on_construct (pos)
 	local meta = minetest.get_meta (pos)
 
@@ -290,9 +289,7 @@ local function can_dig (pos, player)
 
 			if program:len () > 60000 then
 				if player and player:is_player () then
-					minetest.chat_send_player (player:get_player_name (),
-														minetest.colorize ("#ff4040",
-																				 "Program too large to remember!"))
+					minetest.chat_send_player (player:get_player_name (), minetest.colorize ("#ff4040", "Program too large to remember!"))
 
 					return false
 				end
@@ -300,6 +297,10 @@ local function can_dig (pos, player)
 
 
 			if not inv:is_empty ("storage") then
+				if player and player:is_player () then
+					minetest.chat_send_player (player:get_player_name (), minetest.colorize ("#ff4040", "Robot inventory must be empty before it can be broken."))
+				end
+
 				return false
 			end
 		end
@@ -362,23 +363,76 @@ local function allow_metadata_inventory_move (pos, from_list, from_index, to_lis
 
 					if stack and not stack:is_empty () then
 						local base = (math.floor ((to_index - 1) / 10) * 10) + 1
+						local inv_end  = utils.program_inv_size - 10
+						local inv_curr = base 
+						local command = stack:get_name ()
 
-						if stack:get_name () == "lwscratch:cmd_line_insert" then
-							for s = utils.program_inv_size - 10, base, -1 do
+						if command == "lwscratch:cmd_line_insert" then
+							-- Loop from last itemstack upwards to current
+							for s = inv_end, inv_curr, -1 do
+								-- Replace below itemstack with current
 								inv:set_stack (to_list, s + 10, inv:get_stack (to_list, s))
+								-- Erase current itemstack
 								inv:set_stack (to_list, s, nil)
 							end
-
 							return 0
 
-						elseif stack:get_name () == "lwscratch:cmd_line_remove" then
-							for s = base, utils.program_inv_size - 10 do
+						elseif command == "lwscratch:cmd_line_remove" then
+							-- Loop from current itemstack downwards to last
+							for s = inv_curr, inv_end, 1 do
+								-- Replace current itemstack with below
 								inv:set_stack (to_list, s, inv:get_stack (to_list, s + 10))
+								-- Erase below itemstack
 								inv:set_stack (to_list, s + 10, nil)
 							end
-
 							return 0
-
+						elseif command == "lwscratch:cmd_line_duplicate" then
+							for s = inv_end, inv_curr, -1 do
+								-- Replace below itemstack with current
+								inv:set_stack (to_list, s + 10, inv:get_stack (to_list, s))
+								-- If below current line
+								if s < inv_curr - 9 then
+									-- Erase current itemstack
+									inv:set_stack (to_list, s, nil)
+								end
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_indent" then
+							local inv_linebeg = inv_curr
+							local inv_lineend = inv_curr + 8
+							for s = inv_lineend, inv_linebeg, -1 do
+								inv:set_stack (to_list, s + 1, inv:get_stack (to_list, s))
+								inv:set_stack (to_list, s, nil)
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_unindent" then
+							local inv_linebeg = inv_curr + 1
+							local inv_lineend = inv_curr + 9
+							for s = inv_linebeg, inv_lineend, 1 do
+								inv:set_stack (to_list, s - 1, inv:get_stack (to_list, s))
+								inv:set_stack (to_list, s, nil)
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_shift_down" then
+							local inv_linebeg = inv_curr
+							local inv_lineend = inv_curr + 9
+							for s = inv_linebeg, inv_lineend, 1 do
+								local stack_below = inv:get_stack (to_list, s + 10)
+								local stack_curr  = inv:get_stack (to_list, s)
+								inv:set_stack (to_list, s,      stack_below)
+								inv:set_stack (to_list, s + 10, stack_curr)
+							end
+							return 0
+						elseif command == "lwscratch:cmd_line_shift_up" then
+							local inv_linebeg = inv_curr - 10
+							local inv_lineend = inv_curr - 10 + 9
+							for s = inv_linebeg, inv_lineend, 1 do
+								local stack_below = inv:get_stack (to_list, s + 10)
+								local stack_curr  = inv:get_stack (to_list, s)
+								inv:set_stack (to_list, s,      stack_below)
+								inv:set_stack (to_list, s + 10, stack_curr)
+							end
+							return 0
 						end
 					end
 				end
@@ -620,12 +674,12 @@ minetest.register_node ("lwscratch:robot", {
 		}
 	},
    selection_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
    collision_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
 	groups = { cracky = 2, oddly_breakable_by_hand = 2 },
 	sounds = {
@@ -688,12 +742,12 @@ minetest.register_node ("lwscratch:robot_on", {
 		}
 	},
    selection_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
    collision_box = {
-      type = "fixed",
-      fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
+  	type = "fixed",
+  	fixed = { -0.5, -0.5, -0.375, 0.5, 0.5, 0.375 }
    },
 	groups = { cracky = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1 },
 	sounds = {

@@ -6,9 +6,9 @@ if minetest.get_translator and minetest.get_translator ("lwscratch") then
 	utils.S = minetest.get_translator ("lwscratch")
 elseif minetest.global_exists ("intllib") then
    if intllib.make_gettext_pair then
-      utils.S = intllib.make_gettext_pair ()
+  	utils.S = intllib.make_gettext_pair ()
    else
-      utils.S = intllib.Getter ()
+  	utils.S = intllib.Getter ()
    end
 else
    utils.S = function (s) return s end
@@ -372,8 +372,8 @@ function utils.prep_inventory (inv, program)
 		"lwscratch:cmd_cond_value_less",
 		"lwscratch:cmd_cond_value_even",
 		"lwscratch:cmd_cond_value_odd",
-		"",
-		"",
+		"lwscratch:cmd_cond_value_contains",
+		"lwscratch:cmd_cond_value_matches_regex",
 		"",
 
 		"lwscratch:cmd_cond_contains",
@@ -394,13 +394,13 @@ function utils.prep_inventory (inv, program)
 		"lwscratch:cmd_cond_detect_down",
 		"lwscratch:cmd_cond_detect_up",
 
-		"lwscratch:cmd_line_insert",
 		"lwscratch:cmd_line_remove",
-		"",
-		"",
-		"",
-		"",
-		"",
+		"lwscratch:cmd_line_insert",
+		"lwscratch:cmd_line_duplicate",
+		"lwscratch:cmd_line_shift_down",
+		"lwscratch:cmd_line_shift_up",
+		"lwscratch:cmd_line_indent",
+		"lwscratch:cmd_line_unindent",
 		"",
 
 	}
