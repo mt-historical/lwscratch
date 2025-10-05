@@ -1,108 +1,39 @@
-local compatible_game = false
-local items = {
-	ingot_1 = nil,
-	ingot_2 = nil,
-	ingot_3 = nil,
-	redstone= nil,
-	chest   = nil,
-	paper   = nil,
-	clay    = nil,
-	glass   = nil,
-	stick   = nil,
-	coal    = nil,
-	stone   = nil,
-	book    = nil,
-}
+local mats = xcompat.materials
 
+-- Easier to remember recipes (ComputerCraft-inspired) 
+minetest.register_craft({
+	output = "lwscratch:cassette 1", 
+	recipe = { mats.book, mats.copper_ingot, mats.mese_crystal },
+	type   = "shapeless"
+})
+minetest.register_craft({
+	output = "lwscratch:robot 1", 
+	recipe = {
+		{ mats.copper_ingot, mats.copper_ingot, mats.copper_ingot },
+		{ mats.copper_ingot, mats.mese_crystal, mats.copper_ingot },
+		{ mats.copper_ingot, mats.chest,        mats.copper_ingot }
+	}
+})
 
-if core.get_modpath ("default") then
-	compatible_game = true
-	items["ingot_1"]  =  "default:steel_ingot"
-	items["ingot_2"]  =  "default:copper_ingot"
-	items["ingot_3"]  =  "default:tin_ingot"
-	items["redstone"] =  "default:mese_crystal"
-	items["chest"]    =  "default:chest"
-	items["paper"]    =  "default:paper"
-	items["clay"]     =  "default:clay_lump"
-	items["glass"]    =  "default:glass"
-	items["stick"]    =  "default:stick"
-	items["coal"]     =  "default:coal_lump"
-	items["stone"]    =  "default:stone"
-	items["book"]     =  "default:book"
-elseif core.get_modpath("mcl_core") then
-	compatible_game = true
-	items["ingot_1"]  =  "mcl_core:iron_ingot"
-	items["ingot_3"]  =  "mcl_core:gold_ingot"
-	items["paper"]    =  "mcl_core:paper"
-	items["clay"]     =  "mcl_core:clay_lump"
-	items["glass"]    =  "mcl_core:glass"
-	items["stick"]    =  "mcl_core:stick"
-	items["coal"]     =  "mcl_core:coal_lump"
-	items["stone"]    =  "mcl_core:stone"
-	-- Add fallbacks if someone has cherry-picked mcl mods
-	if core.get_modpath("mcl_copper") then
-		items["ingot_2"]  =  "mcl_copper:copper_ingot"
-	else
-		items["ingot_2"]  =  items["ingot_3"]
-	end
-	if core.get_modpath("mcl_chests") then
-		items["chest"]    =  "mcl_chests:chest"
-	else
-		items["chest"]    =  items["glass"]
-	end
-	if core.get_modpath("mcl_books") then
-		items["book"]     =  "mcl_books:book"
-	else
-		items["book"]     =  items["paper"]
-	end
-	if core.get_modpath("mcl_redstone") then
-		items["redstone"] =  "mcl_redstone:redstone"
-	else
-		items["redstone"] =  items["coal"]
-	end
-end
-
-
-if compatible_game then
-	-- Easier to remember recipes (ComputerCraft-inspired) 
-	minetest.register_craft({
-		output = "lwscratch:cassette 1", 
-		recipe = { items["book"], items["ingot_2"], items["redstone"] },
-	 	type   = "shapeless"
-	})
-	minetest.register_craft({
-		output = "lwscratch:robot 1", 
-		recipe = {
-			{ items["ingot_2"], items["ingot_2"],     items["ingot_2"] },
-			{ items["ingot_2"], items["redstone"],    items["ingot_2"] },
-			{ items["ingot_2"], items["chest"],       items["ingot_2"] }
-		}
-	})
-	
-	-- Legacy recipes
-	minetest.register_craft({
-		output = "lwscratch:cassette 1", 
-		recipe = { items["clay"], items["coal"], items["stick"], items["book"] },
-		type   = "shapeless"
-	})
-	minetest.register_craft({
-		output = "lwscratch:robot 1", 
-		recipe = {
-			{ items["stone"],   items["ingot_3"], items["glass"] },
-			{ items["ingot_1"], items["coal"],    items["ingot_1"] },
-			{ items["stick"],   items["ingot_2"], items["clay"] }
-		}
-	})
-	minetest.register_craft({
-		output = "lwscratch:robot 1", 
-		recipe = {
-			{ items["stone"],   items["ingot_1"], items["glass"] },
-			{ items["ingot_1"], items["coal"],    items["ingot_1"] },
-			{ items["stick"],   items["ingot_1"], items["clay"] }
-		}
-	})
-else
-	core.log("error", "LwScratch: Couldn't add recipes. Items can be fetched with " ..
-	"creative mode or \"/give\" with the values \"lwscratch:robot\" and " ..
-	"\"lwscratch:cassette\".")
-end
+-- Legacy recipes
+minetest.register_craft({
+	output = "lwscratch:cassette 1", 
+	recipe = { mats.clay_lump, mats.coal_lump, mats.stick, mats.book },
+	type   = "shapeless"
+})
+minetest.register_craft({
+	output = "lwscratch:robot 1", 
+	recipe = {
+		{ mats.stone,       mats.tin_ingot,    mats.glass },
+		{ mats.steel_ingot, mats.coal_lump,    mats.steel_ingot },
+		{ mats.stick,       mats.copper_ingot, mats.clay_lump }
+	}
+})
+minetest.register_craft({
+	output = "lwscratch:robot 1", 
+	recipe = {
+		{ mats.stone,       mats.steel_ingot, mats.glass },
+		{ mats.steel_ingot, mats.coal_lump,   mats.steel_ingot },
+		{ mats.stick,       mats.steel_ingot, mats.clay_lump }
+	}
+})
