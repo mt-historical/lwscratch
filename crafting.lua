@@ -47,6 +47,22 @@ end
 
 
 if compatible_game then
+	-- Easier to remember recipes (ComputerCraft-inspired) 
+	minetest.register_craft({
+		output = "lwscratch:cassette 1", 
+		recipe = { items["book"], items["ingot_2"], items["redstone"] },
+	 	type   = "shapeless"
+	})
+	minetest.register_craft({
+		output = "lwscratch:robot 1", 
+		recipe = {
+			{ items["ingot_2"], items["ingot_2"],     items["ingot_2"] },
+			{ items["ingot_2"], items["redstone"],    items["ingot_2"] },
+			{ items["ingot_2"], items["chest"],       items["ingot_2"] }
+		}
+	})
+	
+	-- Legacy recipes
 	minetest.register_craft({
 		output = "lwscratch:cassette 1", 
 		recipe = { items["clay"], items["coal"], items["stick"], items["book"] },
