@@ -32,17 +32,34 @@ if core.get_modpath ("default") then
 elseif core.get_modpath("mcl_core") then
 	compatible_game = true
 	items["ingot_1"]  =  "mcl_core:iron_ingot"
-	items["ingot_2"]  =  "mcl_copper:copper_ingot"
 	items["ingot_3"]  =  "mcl_core:gold_ingot"
-	items["redstone"] =  "mcl_redstone:redstone"
-	items["chest"]    =  "mcl_chests:chest"
 	items["paper"]    =  "mcl_core:paper"
 	items["clay"]     =  "mcl_core:clay_lump"
 	items["glass"]    =  "mcl_core:glass"
 	items["stick"]    =  "mcl_core:stick"
 	items["coal"]     =  "mcl_core:coal_lump"
 	items["stone"]    =  "mcl_core:stone"
-	items["book"]     =  "mcl_books:book"
+	-- Add fallbacks if someone has cherry-picked mcl mods
+	if core.get_modpath("mcl_copper") then
+		items["ingot_2"]  =  "mcl_copper:copper_ingot"
+	else
+		items["ingot_2"]  =  items["ingot_3"]
+	end
+	if core.get_modpath("mcl_chests") then
+		items["chest"]    =  "mcl_chests:chest"
+	else
+		items["chest"]    =  items["glass"]
+	end
+	if core.get_modpath("mcl_books") then
+		items["book"]     =  "mcl_books:book"
+	else
+		items["book"]     =  items["paper"]
+	end
+	if core.get_modpath("mcl_redstone") then
+		items["redstone"] =  "mcl_redstone:redstone"
+	else
+		items["redstone"] =  items["coal"]
+	end
 end
 
 
