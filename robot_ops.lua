@@ -479,7 +479,7 @@ function utils.robot_place (robot_pos, side, nodename)
 
 	if stack:get_name ():sub (1, 8) == "farming:" then
 		pointed_thing.under = { x = place_pos.x + vec.x,
-										y = place_pos.y + vec.y,
+										y = place_pos.y + vec.y - 1,
 										z = place_pos.z + vec.z }
 		pointed_thing.above = place_pos
 	end
